@@ -1,3 +1,10 @@
+https://github.com/Greta-Berdynaj/Exercise44.git
+
+worked with: Nur Sarhan, Zeynep Avci
+
+
+
+
 # NewsreaderStarterExercise4
 
 ## Important!
