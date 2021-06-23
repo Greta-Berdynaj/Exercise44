@@ -1,10 +1,12 @@
 package at.ac.fhcampuswien.newsanalyzer.ctrl;
 
+
 import at.ac.fhcampuswien.newsanalyzer.downloader.Downloader;
 import at.ac.fhcampuswien.newsapi.NewsApi;
 import at.ac.fhcampuswien.newsapi.beans.Article;
 import at.ac.fhcampuswien.newsapi.beans.NewsResponse;
 import at.ac.fhcampuswien.newsapi.beans.Source;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +14,7 @@ import java.util.stream.Collectors;
 
 public class Controller {
 
-	public static final String APIKEY = "0038b5ccc1124e94b01d19b0d5982697";  //0038b5ccc1124e94b01d19b0d5982697
+	public static final String APIKEY = "444f194b0f8c4dce9a58789ed50a2555";  //0038b5ccc1124e94b01d19b0d5982697
 
 	private List<Article> articles = null;
 
@@ -23,8 +25,10 @@ public class Controller {
 			throw new IllegalArgumentException();
 
 		articles = getArticles(newsApi);
-		articles = getArticles(newsApi);
 		System.out.println("Get URL list: " + getUrl(articles));
+		urlList = getUrl(articles);
+
+
 		System.out.println("End process");
 
 		return getArticlesPrintReady();
@@ -87,8 +91,9 @@ public class Controller {
 				.orElseThrow();
 	}
 
-	public static List urlList;
 
+	//method to collect all URls in a list
+	public List urlList;
 	public List<String> getUrl(List<Article> urlList) throws NewsAPIException {
 		if (articles == null)
 			throw new NewsAPIException("Load data first");
@@ -99,7 +104,11 @@ public class Controller {
 	}
 
 
-	public String getDownloadLastSearch(Downloader downloader) throws NewsAPIException {
-		return String.valueOf(downloader.process(getUrl(urlList)));
+	public void getDownloadLastSearch(Downloader downloader) throws NewsAPIException{
+		System.out.println("Download last search: ");
+		downloader.process(urlList);
+
+
 	}
+
 }

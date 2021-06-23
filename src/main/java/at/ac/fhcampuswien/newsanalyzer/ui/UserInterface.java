@@ -4,6 +4,8 @@ package at.ac.fhcampuswien.newsanalyzer.ui;
 import at.ac.fhcampuswien.newsanalyzer.ctrl.Controller;
 import at.ac.fhcampuswien.newsanalyzer.ctrl.NewsAPIException;
 import at.ac.fhcampuswien.newsanalyzer.downloader.Downloader;
+import at.ac.fhcampuswien.newsanalyzer.downloader.ParallelDownloader;
+import at.ac.fhcampuswien.newsanalyzer.downloader.SequentialDownloader;
 import at.ac.fhcampuswien.newsapi.NewsApi;
 import at.ac.fhcampuswien.newsapi.NewsApiBuilder;
 import at.ac.fhcampuswien.newsapi.enums.Country;
@@ -48,7 +50,7 @@ public class UserInterface {
 		menu.insert("x", "Shortest author name", this::getShortestNameOfAuthors);    // Exercise 3
 		menu.insert("y", "Get article count", this::getArticleCount);    // Exercise 3
 		menu.insert("z", "Sort by longest title", this::getSortArticlesByLongestTitle); // Exercise 3
-		menu.insert("g", "Download URLs", this::getDownloadLastSearch);
+		menu.insert("g", "Download last search", this::getDownloadLastSearch);
 		//Todo
 		menu.insert("q", "Quit", null);
 		Runnable choice;
@@ -57,10 +59,6 @@ public class UserInterface {
 		}
 		System.out.println("Program finished");
 	}
-
-	private void getDownloadLastSearch() {
-	}
-
 
 	protected String readLine() {
 		String value = "\0";
@@ -198,6 +196,23 @@ public class UserInterface {
 		}
 
 		System.out.println(result);
+	}
+
+	private ParallelDownloader parallelDownload = new ParallelDownloader();
+	private SequentialDownloader sequentialDownload = new SequentialDownloader();
+
+	public void getDownloadLastSearch() {
+		try {
+			System.out.println("ParallelDownloader result: " + parallelDownload);
+			ctrl.getDownloadLastSearch(parallelDownload);
+			System.out.println("SequentialDownloader result: " + sequentialDownload);
+			ctrl.getDownloadLastSearch(sequentialDownload);
+
+		} catch (NewsAPIException e) {
+			System.out.println("Please download last search!");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 }
