@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.newsanalyzer.ctrl;
 
+import at.ac.fhcampuswien.newsanalyzer.downloader.Downloader;
 import at.ac.fhcampuswien.newsapi.NewsApi;
 import at.ac.fhcampuswien.newsapi.beans.Article;
 import at.ac.fhcampuswien.newsapi.beans.NewsResponse;
@@ -15,14 +16,15 @@ public class Controller {
 
 	private List<Article> articles = null;
 
-	public String process(NewsApi newsApi) throws NewsAPIException, IllegalArgumentException{
+	public String process(NewsApi newsApi) throws NewsAPIException, IllegalArgumentException {
 		System.out.println("Start process");
 
-		if(newsApi == null)
+		if (newsApi == null)
 			throw new IllegalArgumentException();
 
 		articles = getArticles(newsApi);
-
+		articles = getArticles(newsApi);
+		System.out.println("Get URL list: " + getUrl(articles));
 		System.out.println("End process");
 
 		return getArticlesPrintReady();
@@ -31,10 +33,10 @@ public class Controller {
 	public List<Article> getArticles(NewsApi newsApi) throws NewsAPIException {
 		NewsResponse newsResponse = newsApi.getNews();
 
-		if(!newsResponse.getStatus().equals("ok")){
+		if (!newsResponse.getStatus().equals("ok")) {
 			throw new NewsAPIException("News Response returned status " + newsResponse.getStatus());
 		}
-		
+
 		return newsResponse.getArticles();
 	}
 
@@ -45,13 +47,13 @@ public class Controller {
 	}
 
 	public long getArticleCount() throws NewsAPIException {
-		if(articles == null)
+		if (articles == null)
 			throw new NewsAPIException("Load articles first");
 		return articles.size();
 	}
 
 	public String getSortArticlesByLongestTitle() throws NewsAPIException {
-		if(articles == null)
+		if (articles == null)
 			throw new NewsAPIException("Load articles first");
 		return articles.stream()
 				.map(Article::getTitle)
@@ -61,7 +63,7 @@ public class Controller {
 	}
 
 	public String getShortestNameOfAuthors() throws NewsAPIException {
-		if(articles == null)
+		if (articles == null)
 			throw new NewsAPIException("Load data first");
 
 		return articles.stream()
@@ -72,7 +74,7 @@ public class Controller {
 	}
 
 	public String getProviderWithMostArticles() throws NewsAPIException {
-		if(articles == null)
+		if (articles == null)
 			throw new NewsAPIException("Load data first");
 
 		return articles.stream()
@@ -83,5 +85,21 @@ public class Controller {
 				.max(Comparator.comparingInt(o -> o.getValue().size()))
 				.map(stringListEntry -> stringListEntry.getKey() + " " + stringListEntry.getValue().size())
 				.orElseThrow();
+	}
+
+	public static List urlList;
+
+	public List<String> getUrl(List<Article> urlList) throws NewsAPIException {
+		if (articles == null)
+			throw new NewsAPIException("Load data first");
+
+		return urlList.stream().
+				map(article -> article.getUrl()).
+				collect(Collectors.toList());
+	}
+
+
+	public String getDownloadLastSearch(Downloader downloader) throws NewsAPIException {
+		return String.valueOf(downloader.process(getUrl(urlList)));
 	}
 }

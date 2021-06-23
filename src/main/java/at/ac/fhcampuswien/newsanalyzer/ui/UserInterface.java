@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.newsanalyzer.ui;
 
 import at.ac.fhcampuswien.newsanalyzer.ctrl.Controller;
 import at.ac.fhcampuswien.newsanalyzer.ctrl.NewsAPIException;
+import at.ac.fhcampuswien.newsanalyzer.downloader.Downloader;
 import at.ac.fhcampuswien.newsapi.NewsApi;
 import at.ac.fhcampuswien.newsapi.NewsApiBuilder;
 import at.ac.fhcampuswien.newsapi.enums.Country;
@@ -20,7 +21,7 @@ public class UserInterface {
 		System.out.println("Enter search query:");
 		String searchQuery = readLine();
 		System.out.println("Enter amount of results (max 100):");
-		Double resultsAnmount = readDouble(0,100);
+		Double resultsAnmount = readDouble(0, 100);
 		NewsApi newsApi = new NewsApiBuilder()
 				.setApiKey(Controller.APIKEY)
 				.setQ(searchQuery)
@@ -43,58 +44,59 @@ public class UserInterface {
 		menu.insert("a", "Top headlines for Austria", this::getTopHeadlinesAustria);
 		menu.insert("b", "All news for 'bitcoin' in June", this::getAllNewsBitcoin);
 		menu.insert("d", "Search based on user input", this::getDataForCustomInput); // Exercise 3
-		menu.insert("w", "Get provider with max articles", this::getProviderWithMostArticles);	// Exercise 3
-		menu.insert("x", "Shortest author name", this::getShortestNameOfAuthors);	// Exercise 3
-		menu.insert("y", "Get article count", this::getArticleCount);	// Exercise 3
+		menu.insert("w", "Get provider with max articles", this::getProviderWithMostArticles);    // Exercise 3
+		menu.insert("x", "Shortest author name", this::getShortestNameOfAuthors);    // Exercise 3
+		menu.insert("y", "Get article count", this::getArticleCount);    // Exercise 3
 		menu.insert("z", "Sort by longest title", this::getSortArticlesByLongestTitle); // Exercise 3
-		menu.insert("g", "Download URLs", () -> {
-			//Todo
-		});
+		menu.insert("g", "Download URLs", this::getDownloadLastSearch);
+		//Todo
 		menu.insert("q", "Quit", null);
 		Runnable choice;
 		while ((choice = menu.exec()) != null) {
-			 choice.run();
+			choice.run();
 		}
 		System.out.println("Program finished");
 	}
 
+	private void getDownloadLastSearch() {
+	}
 
-    protected String readLine() {
+
+	protected String readLine() {
 		String value = "\0";
 		BufferedReader inReader = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			value = inReader.readLine();
-        } catch (IOException ignored) {
+		} catch (IOException ignored) {
 
 		}
 		return value.trim();
 	}
 
-	protected Double readDouble(int lowerlimit, int upperlimit) 	{
+	protected Double readDouble(int lowerlimit, int upperlimit) {
 		Double number = null;
-        while (number == null) {
+		while (number == null) {
 			String str = this.readLine();
 			try {
 				number = Double.parseDouble(str);
-            } catch (NumberFormatException e) {
-                number = null;
+			} catch (NumberFormatException e) {
+				number = null;
 				System.out.println("Please enter a valid number:");
 				continue;
 			}
-            if (number < lowerlimit) {
+			if (number < lowerlimit) {
 				System.out.println("Please enter a higher number:");
-                number = null;
-            } else if (number > upperlimit) {
+				number = null;
+			} else if (number > upperlimit) {
 				System.out.println("Please enter a lower number:");
-                number = null;
+				number = null;
 			}
 		}
 		return number;
 	}
 
 	/**
-	 *  Get the author with the longest name
-	 *
+	 * Get the author with the longest name
 	 */
 	private void getShortestNameOfAuthors() {
 		try {
@@ -102,14 +104,13 @@ public class UserInterface {
 			System.out.println("The shortest author name is " + result);
 		} catch (NewsAPIException e) {
 			System.out.println("Please load data first!");
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	/**
 	 * Get the amount of articles
-	 *
 	 */
 	private void getArticleCount() {
 		try {
@@ -117,14 +118,13 @@ public class UserInterface {
 			System.out.println(result + " articles loaded");
 		} catch (NewsAPIException e) {
 			System.out.println("Please load data first!");
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	/**
-	 *  Sort the articles based on the length of the title
-	 *
+	 * Sort the articles based on the length of the title
 	 */
 	protected void getSortArticlesByLongestTitle() {
 		try {
@@ -132,7 +132,7 @@ public class UserInterface {
 			System.out.println("Longest title: " + result);
 		} catch (NewsAPIException e) {
 			System.out.println("Please load data first!");
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -140,7 +140,6 @@ public class UserInterface {
 
 	/**
 	 * Get the Provider with the most articles
-	 *
 	 */
 
 	protected void getProviderWithMostArticles() {
@@ -149,14 +148,13 @@ public class UserInterface {
 			System.out.println("Most articles: " + result);
 		} catch (NewsAPIException e) {
 			System.out.println("Please load data first!");
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
 	/**
-	 *  load the headline for austrian news
-	 *
+	 * load the headline for austrian news
 	 */
 	public void getTopHeadlinesAustria() {
 		NewsApi newsApi = new NewsApiBuilder()
@@ -171,7 +169,7 @@ public class UserInterface {
 			result = ctrl.process(newsApi);
 		} catch (NewsAPIException e) {
 			System.err.println("Error occured: " + e.getMessage());
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 
@@ -179,8 +177,7 @@ public class UserInterface {
 	}
 
 	/**
-	 *  load all news from April
-	 *
+	 * load all news from April
 	 */
 	public void getAllNewsBitcoin() {
 		NewsApi newsApi = new NewsApiBuilder()
@@ -196,7 +193,7 @@ public class UserInterface {
 			result = ctrl.process(newsApi);
 		} catch (NewsAPIException e) {
 			System.err.println("Error occured: " + e.getMessage());
-		} catch (Exception e){
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 

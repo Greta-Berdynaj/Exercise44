@@ -15,7 +15,7 @@ public abstract class Downloader {
 
     public abstract int process(List<String> urls);
 
-    public String saveUrl2File(String urlString) {
+    public String saveUrl2File(String urlString){
         InputStream is = null;
         OutputStream os = null;
         String fileName = "";
